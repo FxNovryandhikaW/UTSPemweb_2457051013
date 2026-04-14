@@ -23,3 +23,48 @@ themeBtn.addEventListener('click', function() {
         localStorage.setItem('theme', 'light');
     }
 });
+
+// --- Scroll Reveal Animations (Intersection Observer) ---
+const revealElements = document.querySelectorAll('.reveal');
+const revealOptions = {
+    threshold: 0.1, 
+    rootMargin: "0px 0px -50px 0px"
+};
+
+const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+    entries.forEach((entry, index) => {
+        if (!entry.isIntersecting) return;
+        
+        // Menambahkan sedikit delay terpisah (stagger) jika banyak elemen muncul bersamaan
+        setTimeout(() => {
+            entry.target.classList.add('active');
+        }, index * 150); 
+        
+        observer.unobserve(entry.target);
+    });
+}, revealOptions);
+
+revealElements.forEach(el => {
+    revealOnScroll.observe(el);
+});
+
+// --- Typewriter Effect ---
+const typeTarget = document.getElementById('typewriter');
+if (typeTarget) {
+    const text = typeTarget.getAttribute('data-text');
+    typeTarget.textContent = ''; // Kosongkan text awal
+    let i = 0;
+    
+    function typeWriter() {
+        if (i < text.length) {
+            typeTarget.textContent += text.charAt(i);
+            i++;
+            // Variasi kecepatan ketik simulasi seperti orang mengetik sungguhan
+            let typingSpeed = Math.random() * (50 - 20) + 20; 
+            setTimeout(typeWriter, typingSpeed);
+        }
+    }
+    
+    // Mulai animasi 600ms setelah halaman dimuat
+    setTimeout(typeWriter, 600);
+}
